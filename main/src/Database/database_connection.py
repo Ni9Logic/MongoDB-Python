@@ -11,6 +11,19 @@ class Database:
         load_dotenv()
         self.connectionString = os.environ.get('DB_CONNECTION_STRING')
 
+    def delete_user(self, db, username):
+        collection = db['Users']
+
+        is_deleted = collection.delete_one({"Username": username})
+
+        return is_deleted
+
+    def get_all_users(self, db):
+        collection = db['Users']
+        users = collection.find()
+
+        return users
+
     def validate_user(self, db, username, password):
         collection = db['Users']
         query = {"Username": username}
@@ -24,7 +37,7 @@ class Database:
             return False
 
     def create_user(self, db, username: str, password: str, account_type: bool, is_admin: bool, dob: str,
-                    bank_bal: float):
+                    bank_bal: str):
         # Loading collection of users from users table
         collection = db['Users']
 
@@ -75,7 +88,6 @@ class Database:
 
     def get_client(self):
         try:
-            print(self.connectionString)
             client = pymongo.MongoClient(self.connectionString)
             if client.server_info():
                 return client
