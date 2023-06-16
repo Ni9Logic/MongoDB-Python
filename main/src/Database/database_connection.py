@@ -1,13 +1,15 @@
 import pymongo
 import bcrypt
-from dotenv import dotenv_values
+import datetime
+import os
+from dotenv import load_dotenv
 
 
 class Database:
     def __init__(self):
         # Loading data from the .env files
-        self.env_vars = dotenv_values()
-        self.connectionString = self.env_vars['DB_CONNECTION_STRING']
+        load_dotenv()
+        self.connectionString = os.environ.get('DB_CONNECTION_STRING')
 
     def validate_user(self, db, username, password):
         collection = db['Users']
@@ -16,20 +18,23 @@ class Database:
 
         if user:
             account_password = user.get('Password')
-            print((account_password), (password), (bcrypt.hashpw(password, bcrypt.gensalt())))
             if account_password and bcrypt.checkpw(password, account_password):
                 return user
         else:
             return False
 
     def create_user(self, db, username: str, password: str, account_type: bool, is_admin: bool, dob: str,
-                    created_at: str,
                     bank_bal: float):
         # Loading collection of users from users table
         collection = db['Users']
 
         # Hashing password
         hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+
+        # Formatting createdAt in the right format
+        created_at = datetime.datetime.now()
+        formatted_created_at = created_at.strftime("%Y-%m-%d %H:%M:%S")
+
         # Creating a dictionary of an object and this will be inserted inside the collection of table users
         user_data = {
             "Username": username,
@@ -37,7 +42,7 @@ class Database:
             "Account_type": account_type,
             "is_Admin": is_admin,
             "Date-Of-Birth": dob,
-            "Created-At": created_at,
+            "Created-At": formatted_created_at,
             "Balance": bank_bal
         }
 
@@ -70,6 +75,7 @@ class Database:
 
     def get_client(self):
         try:
+            print(self.connectionString)
             client = pymongo.MongoClient(self.connectionString)
             if client.server_info():
                 return client
