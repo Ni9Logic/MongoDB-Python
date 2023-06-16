@@ -1,163 +1,63 @@
-import os
 import Colors
-import Display
 from Database.database_connection import Database
+from Roles import Admin
+import Display
 
-
-def clear_screen():
-    # Check the operating system
-    os.system('clear') if os.name == 'posix' else os.system('cls')
-
-
-def pause_screen():
-    input(f"\t\t\tPress {Colors.red_color('any')} key to continue...")
-
-
+# Main Function
 def main():
+
+    # Database Object
     database = Database()
+
+    # Mongo db client
     client = database.get_client()
+
+    # Selecting current database
     db = client['bms']
 
+    # Admin Object Re
+    admin = Admin()
+
     while True:
-        clear_screen()
-        # Dialogue Message
-        print(Display.center_text_between_lines(Colors.green_color('Banking Management System')))
-
-        # Getting username and password from the user
-        user_to_delete = input(f"\t\t\tEnter {Colors.yellow_color('Username')}: ")
-        password = input(f"\t\t\tEnter {Colors.yellow_color('Password')}: ").encode('utf-8')
-
-        # Validating the user
-        current_user = database.validate_user(db, user_to_delete, password)
+        current_user = admin.to_login(database, db)
         if current_user:
             print(f"\t\t\tLogged in {Colors.green_color('Successfully')}\n")
             print(f"\t\t\tWelcome, {Colors.blue_color(current_user.get('Username'))}")
 
             # Pauses the screen
-            pause_screen()
+            Display.pause_screen()
 
             # We only want to show this menu if the user currently logging in is admin or not
             if current_user.get('is_Admin'):
                 while True:
-                    clear_screen()
-                    print(Display.center_text_between_lines("Welcome, " + Colors.yellow_color(f"{current_user.get('Username')}")))
-                    print("\t\t\t1. Create User")
-                    print("\t\t\t2. Delete User")
-                    print("\t\t\t3. Update User")
-                    print("\t\t\t4. View Specific User")
-                    print("\t\t\t5. View All Users")
-                    print("\t\t\t6. Log Out")
-                    print("\t\t\t7. Exit Program")
+                    admin.admin_menu(current_user)
 
                     choice = input(f"\t\t\tEnter {Colors.yellow_color('<1-7>')}: ")
                     if choice == '7':
                         # Simply exit the program
-                        clear_screen()
+                        Display.clear_screen()
                         exit(0)
                     elif choice == '6':
                         break
                     elif choice == '5':
-                        # View all the users
-                        while True: 
-                            clear_screen()
-                            print(Display.center_text_between_lines(f"{Colors.yellow_color('View All Users')}"))
-                            users = database.get_all_users(db)
-
-                            for count, user in enumerate(users):
-                                print(f"\t\t\t{count + 1}. {Colors.blue_color(user['Username'])}")
-
-                            break
+                        admin.display_all_users(database, db)
                     elif choice == '4':
-                        while True:
-                            clear_screen()
-                            print(Display.center_text_between_lines(f"{Colors.yellow_color('Find Specific User')}"))
-                            user_to_find = input(f"\t\t\tEnter {Colors.green_color('Username')}: ")
-
-                            user = database.find_by_username(db, user_to_find)
-                            if user:
-                                print(f"\t\t\tUsername: {Colors.blue_color(user.get('Username'))}")
-                                print(f"\t\t\tPassword: {Colors.blue_color(str(user.get('Password')))}")
-                                print(f"\t\t\tAccount Type: {Colors.blue_color(str(user.get('Account_type')))}")
-                                print(f"\t\t\tAdmin Status: {Colors.blue_color(str(user.get('is_Admin')))}")
-                                print(f"\t\t\tDate of Birth: {Colors.blue_color(str(user.get('Date-Of-Birth')))}")
-                                print(f"\t\t\tCreated At: {Colors.blue_color(str(user.get('Created-At')))}")
-                                print(f"\t\t\tCurrent Balance: {Colors.blue_color(str(user.get('Balance')))}")
-                            else:
-                                print(f"\t\t\tNo such user found... ")
-
-                            break
+                        admin.display_specific_user(database, db)
                     elif choice == '3':
-                        pass
+                        admin.update_user(database, db)
                     elif choice == '2':
-                        # Deleting a user
-                        while True:
-                            clear_screen()
-                            print(Display.center_text_between_lines(f"{Colors.yellow_color('Delete User')}"))
-
-                            user_to_delete = input(f"\t\t\tEnter {Colors.green_color('Username')}: ")
-                            is_deleted = database.delete_user(db, user_to_delete)
-                            
-                            if is_deleted.deleted_count == 1:
-                                print(f"\t\t\tUser {Colors.red_color(user_to_delete)} has successfully been deleted...")
-                            else:
-                                print("\t\t\tNo such user found...")
-
-                            break
+                        admin.delete_user(database, db)
                     elif choice == '1':
-                        # Creating a user
-                        while True:
-                            clear_screen()
-                            print(Display.center_text_between_lines(f"{Colors.yellow_color('Create User')}"))\
-                            
-                            # Set username and password
-                            user_to_create_name = input(f"\t\t\tEnter {Colors.blue_color('Username')}: ")
-                            
-                            # Here we are going to check if the user already exists or not because we want our usernames to be unique
-                            is_existAlready = database.find_by_username(db, user_to_create_name)
-                            if is_existAlready:
-                                print(f"\t\t\tSorry the username {Colors.green_color(user_to_create_name)} already exists... ")
-                                pause_screen()
-                                continue
+                        admin.create_user(database, db)
 
-                            user_to_create_password = input(f"\t\t\tEnter {Colors.blue_color('Password')}: ")
-
-                            # Account Type
-                            print(f"\t\t\tUser {Colors.green_color('Account Type')}: ")
-                            print(f"\t\t\t{Colors.red_color('1.')} Savings")
-                            print(f"\t\t\t{Colors.red_color('2.')} Current")
-                            account_type = input(f"\t\t\tEnter: {Colors.blue_color('<1-2>')}: ")
-                            if account_type == '1':
-                                account_type = True
-                            else:
-                                account_type = False
-
-                            
-                            # Admin account or not
-                            print(f"\t\t\tUser {Colors.green_color('Admin')}: ")
-                            print(f"\t\t\t{Colors.green_color('1.')} Yes")
-                            print(f"\t\t\t{Colors.red_color('2.')} No")
-                            is_Admin = input(f"\t\t\tEnter: {Colors.blue_color('<1-2>')}: ")
-                            if is_Admin == '1':
-                                is_Admin = True
-                            else:
-                                is_Admin = False
-
-
-                            # Date of birth
-                            dob_to_create = input(f"\t\t\tEnter {Colors.red_color('Date-of-birth')}: ")
-                            starting_balance = input(f"\t\t\tEnter {Colors.green_color('Starting Balance')}: ")
-
-                            database.create_user(db, user_to_create_name, user_to_create_password, account_type, is_Admin, dob_to_create, starting_balance)
-                            break
-                        
                     else:
                         print(f"\t\t\t{Colors.red_color('Invalid Choice')}")
 
-                    pause_screen()
+                    Display.pause_screen()
 
         else:
             print(f"\t\t\tInvalid {Colors.red_color('Credentials')}")
-            pause_screen()
+            Display.pause_screen()
 
 
 
