@@ -1,5 +1,5 @@
-import Colors
-import Display
+from main.src import Colors
+from main.src import Display
 import bcrypt
 
 

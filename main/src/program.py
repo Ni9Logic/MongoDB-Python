@@ -1,6 +1,6 @@
 import Colors
 import Display
-from Roles import Admin
+from Roles import Admin, User
 from Database.database_connection import Database
 
 
@@ -15,8 +15,9 @@ def main():
     # Selecting current database
     db = client['bms']
 
-    # Admin Object Re
+    # Role Objects
     admin = Admin()
+    user = User()
 
     while True:
         current_user = admin.to_login(database, db)
@@ -54,6 +55,12 @@ def main():
                         print(f"\t\t\t{Colors.red_color('Invalid Choice')}")
 
                     Display.pause_screen()
+            else:
+                # The Project is ready and has all the things it needed
+                # TODO User Withdraw, Deposit, Transactions Some other day for now this is it.
+                pass
+
+
 
         else:
             print(f"\t\t\tInvalid {Colors.red_color('Credentials')}")
