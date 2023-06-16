@@ -44,18 +44,19 @@ def main():
                     print("\t\t\t1. Create User")
                     print("\t\t\t2. Delete User")
                     print("\t\t\t3. Update User")
-                    print("\t\t\t4. View Users")
-                    print("\t\t\t5. Log Out")
-                    print("\t\t\t6. Exit Program")
+                    print("\t\t\t4. View Specific User")
+                    print("\t\t\t5. View All Users")
+                    print("\t\t\t6. Log Out")
+                    print("\t\t\t7. Exit Program")
 
-                    choice = input(f"\t\t\tEnter {Colors.yellow_color('<1-6>')}: ")
-                    if choice == '6':
+                    choice = input(f"\t\t\tEnter {Colors.yellow_color('<1-7>')}: ")
+                    if choice == '7':
                         # Simply exit the program
                         clear_screen()
                         exit(0)
-                    elif choice == '5':
+                    elif choice == '6':
                         break
-                    elif choice == '4':
+                    elif choice == '5':
                         # View all the users
                         while True: 
                             clear_screen()
@@ -64,6 +65,25 @@ def main():
 
                             for count, user in enumerate(users):
                                 print(f"\t\t\t{count + 1}. {Colors.blue_color(user['Username'])}")
+
+                            break
+                    elif choice == '4':
+                        while True:
+                            clear_screen()
+                            print(Display.center_text_between_lines(f"{Colors.yellow_color('Find Specific User')}"))
+                            user_to_find = input(f"\t\t\tEnter {Colors.green_color('Username')}: ")
+
+                            user = database.find_by_username(db, user_to_find)
+                            if user:
+                                print(f"\t\t\tUsername: {Colors.blue_color(user.get('Username'))}")
+                                print(f"\t\t\tPassword: {Colors.blue_color(str(user.get('Password')))}")
+                                print(f"\t\t\tAccount Type: {Colors.blue_color(str(user.get('Account_type')))}")
+                                print(f"\t\t\tAdmin Status: {Colors.blue_color(str(user.get('is_Admin')))}")
+                                print(f"\t\t\tDate of Birth: {Colors.blue_color(str(user.get('Date-Of-Birth')))}")
+                                print(f"\t\t\tCreated At: {Colors.blue_color(str(user.get('Created-At')))}")
+                                print(f"\t\t\tCurrent Balance: {Colors.blue_color(str(user.get('Balance')))}")
+                            else:
+                                print(f"\t\t\tNo such user found... ")
 
                             break
                     elif choice == '3':
@@ -91,6 +111,14 @@ def main():
                             
                             # Set username and password
                             user_to_create_name = input(f"\t\t\tEnter {Colors.blue_color('Username')}: ")
+                            
+                            # Here we are going to check if the user already exists or not because we want our usernames to be unique
+                            is_existAlready = database.find_by_username(db, user_to_create_name)
+                            if is_existAlready:
+                                print(f"\t\t\tSorry the username {Colors.green_color(user_to_create_name)} already exists... ")
+                                pause_screen()
+                                continue
+
                             user_to_create_password = input(f"\t\t\tEnter {Colors.blue_color('Password')}: ")
 
                             # Account Type
