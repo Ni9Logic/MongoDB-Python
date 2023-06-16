@@ -63,7 +63,7 @@ class Database:
         is_created = collection.insert_one(user_data)
 
         # Print the inserted document ID
-        print(f"User created with ID: {is_created.inserted_id}")
+        print(f"\t\t\tUser created with ID: {is_created.inserted_id}")
 
     def find_by_username(self, db, username):
         collection = db['Users']

@@ -50,13 +50,14 @@ def main():
 
                     choice = input(f"\t\t\tEnter {Colors.yellow_color('<1-6>')}: ")
                     if choice == '6':
+                        # Simply exit the program
                         clear_screen()
                         exit(0)
                     elif choice == '5':
                         break
                     elif choice == '4':
                         # View all the users
-                        while True:
+                        while True: 
                             clear_screen()
                             print(Display.center_text_between_lines(f"{Colors.yellow_color('View All Users')}"))
                             users = database.get_all_users(db)
@@ -64,7 +65,6 @@ def main():
                             for count, user in enumerate(users):
                                 print(f"\t\t\t{count + 1}. {Colors.blue_color(user['Username'])}")
 
-                            pause_screen()
                             break
                     elif choice == '3':
                         pass
@@ -82,12 +82,50 @@ def main():
                             else:
                                 print("\t\t\tNo such user found...")
 
-                            pause_screen()
                             break
                     elif choice == '1':
-                        pass
+                        # Creating a user
+                        while True:
+                            clear_screen()
+                            print(Display.center_text_between_lines(f"{Colors.yellow_color('Create User')}"))\
+                            
+                            # Set username and password
+                            user_to_create_name = input(f"\t\t\tEnter {Colors.blue_color('Username')}: ")
+                            user_to_create_password = input(f"\t\t\tEnter {Colors.blue_color('Password')}: ")
+
+                            # Account Type
+                            print(f"\t\t\tUser {Colors.green_color('Account Type')}: ")
+                            print(f"\t\t\t{Colors.red_color('1.')} Savings")
+                            print(f"\t\t\t{Colors.red_color('2.')} Current")
+                            account_type = input(f"\t\t\tEnter: {Colors.blue_color('<1-2>')}: ")
+                            if account_type == '1':
+                                account_type = True
+                            else:
+                                account_type = False
+
+                            
+                            # Admin account or not
+                            print(f"\t\t\tUser {Colors.green_color('Admin')}: ")
+                            print(f"\t\t\t{Colors.green_color('1.')} Yes")
+                            print(f"\t\t\t{Colors.red_color('2.')} No")
+                            is_Admin = input(f"\t\t\tEnter: {Colors.blue_color('<1-2>')}: ")
+                            if is_Admin == '1':
+                                is_Admin = True
+                            else:
+                                is_Admin = False
+
+
+                            # Date of birth
+                            dob_to_create = input(f"\t\t\tEnter {Colors.red_color('Date-of-birth')}: ")
+                            starting_balance = input(f"\t\t\tEnter {Colors.green_color('Starting Balance')}: ")
+
+                            database.create_user(db, user_to_create_name, user_to_create_password, account_type, is_Admin, dob_to_create, starting_balance)
+                            break
+                        
                     else:
                         print(f"\t\t\t{Colors.red_color('Invalid Choice')}")
+
+                    pause_screen()
 
         else:
             print(f"\t\t\tInvalid {Colors.red_color('Credentials')}")
