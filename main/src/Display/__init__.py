@@ -1,5 +1,6 @@
-import Colors
+from main.src import Colors
 import os
+
 
 def center_text_between_lines(text):
     line_length = len(text) + 4  # Length of the line containing dashes, accounting for padding
@@ -12,10 +13,12 @@ def center_text_between_lines(text):
 
     return centered_text
 
+
 # Clears the terminal
 def clear_screen():
     # Check the operating system
     os.system('clear') if os.name == 'posix' else os.system('cls')
+
 
 # Pauses the screen
 def pause_screen():

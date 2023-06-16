@@ -2,6 +2,11 @@ import Colors
 import Display
 import bcrypt
 
+
+class User:
+    pass
+
+
 class Admin:
     # Just a login menu
     def to_login(self, database, db):
@@ -21,7 +26,7 @@ class Admin:
     # Display all the users    
     def display_all_users(self, database, db):
         # View all the users
-        while True: 
+        while True:
             Display.clear_screen()
             print(Display.center_text_between_lines(f"{Colors.yellow_color('View All Users')}"))
             users = database.get_all_users(db)
@@ -61,7 +66,7 @@ class Admin:
 
             user_to_delete = input(f"\t\t\tEnter {Colors.green_color('Username')}: ")
             is_deleted = database.delete_user(db, user_to_delete)
-            
+
             if is_deleted.deleted_count == 1:
                 print(f"\t\t\tUser {Colors.red_color(user_to_delete)} has successfully been deleted...")
             else:
@@ -75,10 +80,10 @@ class Admin:
         while True:
             Display.clear_screen()
             print(Display.center_text_between_lines(f"{Colors.yellow_color('Create User')}"))
-            
+
             # Set username and password
             user_to_create_name = input(f"\t\t\tEnter {Colors.blue_color('Username')}: ")
-            
+
             # Here we are going to check if the user already exists or not because we want our usernames to be unique
             is_existAlready = database.find_by_username(db, user_to_create_name)
             if is_existAlready:
@@ -98,7 +103,6 @@ class Admin:
             else:
                 account_type = False
 
-            
             # Admin account or not
             print(f"\t\t\tUser {Colors.green_color('Admin')}: ")
             print(f"\t\t\t{Colors.green_color('1.')} Yes")
@@ -109,12 +113,12 @@ class Admin:
             else:
                 is_Admin = False
 
-
             # Date of birth
             dob_to_create = input(f"\t\t\tEnter {Colors.red_color('Date-of-birth')}: ")
             starting_balance = input(f"\t\t\tEnter {Colors.green_color('Starting Balance')}: ")
 
-            database.create_user(db, user_to_create_name, user_to_create_password, account_type, is_Admin, dob_to_create, starting_balance)
+            database.create_user(db, user_to_create_name, user_to_create_password, account_type, is_Admin,
+                                 dob_to_create, starting_balance)
             break
 
     # Update a user
@@ -134,7 +138,7 @@ class Admin:
                 choice = input(f"\t\t\tEnter {Colors.yellow_color('<1-2>')}: ")
                 if choice == '1':
                     new_username = input(f"\n\t\t\tEnter {Colors.green_color('new')} {Colors.blue_color('username')}: ")
-                    
+
                     is_updated = database.update_user(db, 'Username', user_to_update, new_username)
 
                     if is_updated:
@@ -143,7 +147,8 @@ class Admin:
                         print(f"\t\t\tNo such user found...")
 
                 elif choice == '2':
-                    new_password = input(f"\n\t\t\tEnter {Colors.green_color('new')} {Colors.blue_color('password')}: ").encode('utf-8')
+                    new_password = input(
+                        f"\n\t\t\tEnter {Colors.green_color('new')} {Colors.blue_color('password')}: ").encode('utf-8')
                     my_user = database.find_by_username(db, user_to_update)
 
                     old_password = my_user.get('Password')
@@ -162,7 +167,7 @@ class Admin:
                 print("\t\t\tNo such user found... ")
 
             break
-            
+
     # Display admin menu
     def admin_menu(self, current_user: object):
         Display.clear_screen()

@@ -36,7 +36,8 @@ class Database:
         else:
             return False
 
-    def create_user(self, db, username: str, password: str, account_type: bool, is_admin: bool, dob: str, bank_bal: str) -> None:
+    def create_user(self, db, username: str, password: str, account_type: bool, is_admin: bool, dob: str,
+                    bank_bal: str) -> None:
         # Loading collection of users from users table
         collection = db['Users']
 
@@ -63,7 +64,7 @@ class Database:
 
         # Print the inserted document ID
         print(f"\t\t\tUser created with ID: {is_created.inserted_id}")
-    
+
     def update_user(self, db, field_name, old_data, new_data):
         collection = db['Users']
         is_find = {f'{field_name}': old_data}
@@ -72,7 +73,7 @@ class Database:
         is_updated = collection.update_one(is_find, is_update)
 
         return is_updated
-    
+
     def find_by_username(self, db, username) -> object:
         collection = db['Users']
         query = {"Username": username}
