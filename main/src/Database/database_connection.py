@@ -63,7 +63,16 @@ class Database:
 
         # Print the inserted document ID
         print(f"\t\t\tUser created with ID: {is_created.inserted_id}")
+    
+    def update_user(self, db, field_name, old_data, new_data):
+        collection = db['Users']
+        is_find = {f'{field_name}': old_data}
+        is_update = {'$set': {f'{field_name}': new_data}}
 
+        is_updated = collection.update_one(is_find, is_update)
+
+        return is_updated
+    
     def find_by_username(self, db, username) -> object:
         collection = db['Users']
         query = {"Username": username}
