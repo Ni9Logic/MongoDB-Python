@@ -15,11 +15,11 @@ class Admin:
         print(Display.center_text_between_lines(Colors.green_color('Banking Management System')))
 
         # Getting username and password from the user
-        user_to_delete = input(f"\t\t\tEnter {Colors.yellow_color('Username')}: ")
+        user_to_login = input(f"\t\t\tEnter {Colors.yellow_color('Username')}: ")
         password = input(f"\t\t\tEnter {Colors.yellow_color('Password')}: ").encode('utf-8')
 
         # Validating the user
-        current_user = database.validate_user(db, user_to_delete, password)
+        current_user = database.validate_user(db, user_to_login, password)
 
         return current_user
 
