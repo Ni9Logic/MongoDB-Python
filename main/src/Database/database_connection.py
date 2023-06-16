@@ -24,7 +24,7 @@ class Database:
 
         return users
 
-    def validate_user(self, db, username, password):
+    def validate_user(self, db, username, password) -> object or bool:
         collection = db['Users']
         query = {"Username": username}
         user = collection.find_one(query)
@@ -36,8 +36,7 @@ class Database:
         else:
             return False
 
-    def create_user(self, db, username: str, password: str, account_type: bool, is_admin: bool, dob: str,
-                    bank_bal: str):
+    def create_user(self, db, username: str, password: str, account_type: bool, is_admin: bool, dob: str, bank_bal: str) -> None:
         # Loading collection of users from users table
         collection = db['Users']
 
@@ -65,14 +64,14 @@ class Database:
         # Print the inserted document ID
         print(f"\t\t\tUser created with ID: {is_created.inserted_id}")
 
-    def find_by_username(self, db, username):
+    def find_by_username(self, db, username) -> object:
         collection = db['Users']
         query = {"Username": username}
-        result = collection.find(query)
+        isFound = collection.find_one(query)
 
-        return result
+        return isFound
 
-    def is_connected(self):
+    def is_connected(self) -> bool:
         try:
             # Establish a connection to the MongoDB database
             client = pymongo.MongoClient(self.connectionString)

@@ -1,9 +1,14 @@
 {
     "cSpell.words": [
+        "blit",
         "checkpw",
+        "collidepoint",
         "dotenv",
         "gensalt",
         "hashpw",
+        "MOUSEBUTTONDOWN",
+        "pygame",
+        "Pygame",
         "pymongo"
     ],
     "[python]": {
