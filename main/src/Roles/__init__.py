@@ -120,42 +120,39 @@ class User:
                     # Lets check if the user didn't entered their own username
                     if to_username == current_user.get('Username'):
                         print(f"\t\t\tYou {Colors.red_color('cannot')} enter your own username...")
-                        continue
-                    
-                    # Findind the user inside database
-                    to_user_exist = database.find_by_username(db, to_username)
-                    
-                    # Checking if the user exists or not
-                    if to_user_exist:
-                        # If the user exists we want to deposit the amount in his account and withdraw amount from in session user
-                        
-                        # Firstly wihdrawing from current user
-                        from_update = {'Balance': current_user.get('Balance')}
-                        to_update = {'$set': {'Balance': str(float(current_user.get('Balance')) - amount_to_transfer)}}
-
-                        # Commiting the withdraw
-                        collection = db['Users']
-                        collection.update_one(from_update, to_update)
-
-                        # Now depositing the amount in the to_username
-                        from_update = {'Balance': to_user_exist.get('Balance')}
-                        to_update = {'$set': {'Balance': str(float(to_user_exist.get('Balance')) + amount_to_transfer)}}
-
-                        # Commiting the deposit
-                        collection = db['Users']
-                        collection.update_one(from_update, to_update)
-
-                        # Success message
-                        print(f"\t\t\tAmount has {Colors.green_color('successfully')} transferred...")
-                    
                     else:
-                        print(f"\t\t\tNo such user exists...")
+                        # Findind the user inside database
+                        to_user_exist = database.find_by_username(db, to_username)
                         
-                    
+                        # Checking if the user exists or not
+                        if to_user_exist:
+                            # If the user exists we want to deposit the amount in his account and withdraw amount from in session user
+                            
+                            # Firstly wihdrawing from current user
+                            from_update = {'Balance': current_user.get('Balance')}
+                            to_update = {'$set': {'Balance': str(float(current_user.get('Balance')) - amount_to_transfer)}}
+
+                            # Commiting the withdraw
+                            collection = db['Users']
+                            collection.update_one(from_update, to_update)
+
+                            # Now depositing the amount in the to_username
+                            from_update = {'Balance': to_user_exist.get('Balance')}
+                            to_update = {'$set': {'Balance': str(float(to_user_exist.get('Balance')) + amount_to_transfer)}}
+
+                            # Commiting the deposit
+                            collection = db['Users']
+                            collection.update_one(from_update, to_update)
+
+                            # Success message
+                            print(f"\t\t\tAmount has {Colors.green_color('successfully')} transferred...")
+                        
+                        else:
+                            print(f"\t\t\tNo such user exists...")
+                                    
             except ValueError:
-                print("\t\t\tKindly enter correct value...")
-                continue
-            
+                print(f"\t\t\tKindly enter {Colors.green_color('correct')} value...")
+
             break
 
 class Admin:
