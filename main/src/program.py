@@ -12,7 +12,7 @@ def main():
     # Mongo db client
     client = database.get_client()
 
-    # Selecting current database
+    # Selecting current database``
     db = client['bms']
 
     # Role Objects
@@ -20,7 +20,9 @@ def main():
     user = User()
 
     while True:
+        # This returns the current user logged in
         current_user = admin.to_login(database, db)
+
         if current_user:
             print(f"\t\t\tLogged in {Colors.green_color('Successfully')}\n")
             print(f"\t\t\tWelcome, {Colors.blue_color(current_user.get('Username'))}")
@@ -57,7 +59,10 @@ def main():
                     Display.pause_screen()
             else:
                 while True:
-                    user.user_menu(current_user)
+                    # We want our details to be displayed updated and this is going to avoid repeitions inside functions
+                    user_in_session = database.find_by_username(db, current_user.get('Username'))
+
+                    user.user_menu(user_in_session)
                     choice = input(f"\t\t\tEnter {Colors.yellow_color('<1-7>')}: ")
                     if choice == '7':
                         # Simply exit the program
@@ -68,13 +73,13 @@ def main():
                     elif choice == '5':
                         pass
                     elif choice == '4':
-                        pass
+                        user.view_profile(user_in_session)
                     elif choice == '3':
-                        pass
+                        user.transfer_balance(database, db, user_in_session)
                     elif choice == '2':
-                        pass
+                        user.deposit(db, user_in_session)
                     elif choice == '1':
-                        user.withdraw(database, db, current_user)
+                        user.withdraw(db, user_in_session)
 
                     else:
                         print(f"\t\t\t{Colors.red_color('Invalid Choice')}")
