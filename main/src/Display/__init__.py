@@ -1,4 +1,4 @@
-from main.src import Colors
+import Colors
 import os
 
 

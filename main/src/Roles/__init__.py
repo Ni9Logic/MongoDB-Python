@@ -1,10 +1,69 @@
-from main.src import Colors
-from main.src import Display
+import Display
+import Colors
 import bcrypt
 
 
 class User:
-    pass
+
+    def user_menu(self, current_user: object) -> None:
+        Display.clear_screen()
+        print(Display.center_text_between_lines("Welcome, " + Colors.yellow_color(f"{current_user.get('Username')}")))
+        print("\t\t\t1. Withdraw Amount")
+        print("\t\t\t2. Deposit Amount")
+        print("\t\t\t3. Transfer Amount")
+        print("\t\t\t4. View Profile")
+        print("\t\t\t5. View Last 5 Transactions")
+        print("\t\t\t6. Log Out")
+        print("\t\t\t7. Exit Program")
+
+    def withdraw(self, database, db, current_user: object) -> None:
+        while True:
+            Display.clear_screen()
+            print(Display.center_text_between_lines(f"{Colors.yellow_color('Withdraw Amount')}"))
+
+            '''
+                Updating / Reloading / Refreshing the current user
+                A small fix to get the updated value each time without having to relogged in the system
+            '''
+            in_session_user = database.find_by_username(db, current_user.get('Username'))
+
+            print(f"\t\t\tYour current balance is {Colors.green_color(in_session_user.get('Balance'))}")
+
+            # This is to avoid if someone enters a string where he's expected to enter a number
+            try:
+                # Amount to withdraw
+                amount_to_withdraw = float(input("\t\t\tEnter the amount you want to withdraw: "))
+                current_balance = float(in_session_user.get('Balance'))
+
+                if amount_to_withdraw > current_balance:
+                    print(f"\t\t\tThe amount you are trying to {Colors.green_color('Withdraw')} is greater than "
+                          f"{Colors.green_color('Current Balance')}...")
+                else:
+                    # Setting the new balance first
+                    new_balance = current_balance - amount_to_withdraw
+
+                    # Updating balance
+                    from_update = {'Balance': in_session_user.get('Balance')}
+                    to_update = {'$set': {'Balance': str(new_balance)}}
+
+                    # Committing the changes in the database
+                    collection = db['Users']
+                    is_updated = collection.update_one(from_update, to_update)
+
+                    # Checking
+                    if is_updated:
+
+                        print(
+                            f"\t\t\tYou have successfully withdrawn {Colors.green_color(str(amount_to_withdraw))} rs /-")
+                        print(f"\t\t\tYour new balance is: {Colors.blue_color(str(new_balance))} rs /-")
+
+                    else:
+                        print(f"\t\t\tSome random {Colors.red_color('Error')} has occurred...")
+
+            except ValueError:
+                print("\t\t\tKindly Enter a correct value... ")
+
+            break
 
 
 class Admin:

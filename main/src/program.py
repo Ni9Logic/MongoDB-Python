@@ -56,12 +56,30 @@ def main():
 
                     Display.pause_screen()
             else:
-                # The Project is ready and has all the things it needed
-                # TODO User Withdraw, Deposit, Transactions Some other day for now this is it.
-                pass
+                while True:
+                    user.user_menu(current_user)
+                    choice = input(f"\t\t\tEnter {Colors.yellow_color('<1-7>')}: ")
+                    if choice == '7':
+                        # Simply exit the program
+                        Display.clear_screen()
+                        exit(0)
+                    elif choice == '6':
+                        break
+                    elif choice == '5':
+                        pass
+                    elif choice == '4':
+                        pass
+                    elif choice == '3':
+                        pass
+                    elif choice == '2':
+                        pass
+                    elif choice == '1':
+                        user.withdraw(database, db, current_user)
 
+                    else:
+                        print(f"\t\t\t{Colors.red_color('Invalid Choice')}")
 
-
+                    Display.pause_screen()
         else:
             print(f"\t\t\tInvalid {Colors.red_color('Credentials')}")
             Display.pause_screen()
