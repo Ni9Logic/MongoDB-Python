@@ -80,6 +80,7 @@ def main():
                         print(f"\t\t\t{Colors.red_color('Invalid Choice')}")
 
                     Display.pause_screen()
+        
         else:
             print(f"\t\t\tInvalid {Colors.red_color('Credentials')}")
             Display.pause_screen()
