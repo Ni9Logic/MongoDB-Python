@@ -59,7 +59,8 @@ def main():
                     Display.pause_screen()
             else:
                 while True:
-                    # We want our details to be displayed updated and this is going to avoid repeitions inside functions
+                    # We want our details to be displayed updated and this is going to avoid repetitions inside
+                    # functions
                     user_in_session = database.find_by_username(db, current_user.get('Username'))
 
                     user.user_menu(user_in_session)
