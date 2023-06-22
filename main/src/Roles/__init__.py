@@ -1,5 +1,6 @@
 import Display
 import Colors
+import Transaction
 import bcrypt
 
 class User:
@@ -42,6 +43,9 @@ class User:
             if is_updated:
                 print(f"\t\t\tYou have successfully withdrawn {Colors.green_color(str(amount_to_deposit))} rs /-")
                 print(f"\t\t\tYour new balance is: {Colors.blue_color(str(new_balance))} rs /-")
+                
+                # Adding the successfull transaction in transactions scheme
+                Transaction.create_transaction(current_user.get('Username'), 'Deposit', amount_to_deposit)
             else:
                 print(f"\t\t\tSome random {Colors.red_color('Error')} has occurred...")
 
@@ -79,6 +83,9 @@ class User:
                         print(f"\t\t\tYou have successfully withdrawn {Colors.green_color(str(amount_to_withdraw))} rs /-")
                         print(f"\t\t\tYour new balance is: {Colors.blue_color(str(float(current_user.get('Balance')) - amount_to_withdraw))} rs /-")
 
+                        # Adding the successfull transaction in transactions scheme
+                        Transaction.create_transaction(current_user.get('Username'), 'Withdraw', amount_to_withdraw)
+
                     else:
                         print(f"\t\t\tSome random {Colors.red_color('Error')} has occurred...")
 
@@ -100,6 +107,27 @@ class User:
             print(f"\t\t\tCurrent Balance: {Colors.blue_color(str(current_user.get('Balance')))}")
             
             break
+
+    def view_transactions(self, db: object, current_user: object) -> None:
+        while True:
+            Display.clear_screen()
+            print(Display.center_text_between_lines(f"{Colors.yellow_color('View Profile')}"))
+
+            transactions = Transaction.show_user_transactions(db, current_user)
+
+            for index, trans in enumerate(transactions):
+                print(f"\t\t\tTransaction {Colors.yellow_color(f'{index + 1}')}\n")
+                print(f"\t\t\tUsername: {Colors.blue_color(trans.get('Username'))}")
+                print(f"\t\t\tTransaction Type: {Colors.blue_color(str(trans.get('Transaction Type')))}")
+                print(f"\t\t\tTransaction Amount: {Colors.blue_color(str(trans.get('Transaction Amount')))}")
+                print(f"\t\t\tTo User: {Colors.blue_color(str(trans.get('To User')))}")
+                print(f"\t\t\tTransaction At: {Colors.blue_color(str(trans.get('Transaction At')))}")
+
+                # For now lets just print all
+
+            
+            break
+
 
     def transfer_balance(self, database: object, db, current_user: object) -> None:
         while True:
@@ -146,6 +174,9 @@ class User:
 
                             # Success message
                             print(f"\t\t\tAmount has {Colors.green_color('successfully')} transferred...")
+
+                            # Adding the successfull transaction in transactions scheme
+                            Transaction.create_transaction(current_user.get('Username'), 'Deposit', amount_to_transfer, to_username)
                         
                         else:
                             print(f"\t\t\tNo such user exists...")
