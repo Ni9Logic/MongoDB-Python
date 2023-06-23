@@ -4,7 +4,7 @@ import Transactions
 import bcrypt
 
 class User:
-
+    # User Menu
     def user_menu(self, current_user: object) -> None:
         Display.clear_screen()
         print(Display.center_text_between_lines("Welcome, " + Colors.yellow_color(f"{current_user.get('Username')}")))
@@ -16,6 +16,7 @@ class User:
         print("\t\t\t6. Log Out")
         print("\t\t\t7. Exit Program")
 
+    # User Deposit
     def deposit(self, db, current_user: object) -> None:
         Display.clear_screen()
         print(Display.center_text_between_lines(f"{Colors.yellow_color('Deposit Amount')}"))
@@ -54,6 +55,7 @@ class User:
         except ValueError:
             print("\t\t\tKindly enter a correct value...")
 
+    # User Withdraw
     def withdraw(self, db, current_user: object) -> None:
         while True:
             Display.clear_screen()
@@ -95,6 +97,7 @@ class User:
 
             break
     
+    # View own Profile
     def view_profile(self, current_user: object) -> None:
         while True:
             Display.clear_screen()
@@ -109,27 +112,26 @@ class User:
             
             break
 
+    # View recent five transactions
     def view_transactions(self, db: object, current_user: object) -> None:
         while True:
             Display.clear_screen()
-            print(Display.center_text_between_lines(f"{Colors.yellow_color('View Profile')}"))
+            print(Display.center_text_between_lines(f"{Colors.yellow_color('View Transaction')}"))
 
             transactions = Transactions.show_user_transactions(db, current_user)
 
-            for index, trans in enumerate(transactions):
-                print(f"\n\t\t\tTransaction {Colors.yellow_color(f'{index + 1}')}")
+            for trans in transactions:
+
+                print(f"\t\t\tTransaction ID: {Colors.yellow_color(str(trans.get('_id')))}")
                 print(f"\t\t\tUsername: {Colors.blue_color(trans.get('Username'))}")
                 print(f"\t\t\tTransaction Type: {Colors.blue_color(str(trans.get('Transaction Type')))}")
                 print(f"\t\t\tTransaction Amount: {Colors.blue_color(str(trans.get('Transaction Amount')))}")
                 print(f"\t\t\tTo User: {Colors.blue_color(str(trans.get('To User')))}")
                 print(f"\t\t\tTransaction At: {Colors.blue_color(str(trans.get('Transaction At')))}")
 
-                # For now lets just print all
-
-            
             break
 
-
+    # Transfer the balance from one user to another
     def transfer_balance(self, database: object, db, current_user: object) -> None:
         while True:
             Display.clear_screen()
@@ -177,7 +179,7 @@ class User:
                             print(f"\t\t\tAmount has {Colors.green_color('successfully')} transferred...")
 
                             # Adding the successful transaction in transactions scheme
-                            Transactions.create_transaction(db, current_user.get('Username'), 'Deposit', amount_to_transfer, to_username)
+                            Transactions.create_transaction(db, current_user.get('Username'), 'Transfer', amount_to_transfer, to_username)
                         
                         else:
                             print(f"\t\t\tNo such user exists...")
@@ -189,7 +191,7 @@ class User:
 
 class Admin:
     # Just a login menu
-    def to_login(self, database, db):
+    def to_login(self, database: object, db: object) -> None:
         Display.clear_screen()
         # Dialogue Message
         print(Display.center_text_between_lines(Colors.green_color('Banking Management System')))
@@ -204,7 +206,7 @@ class Admin:
         return current_user
 
     # Display all the users    
-    def display_all_users(self, database, db):
+    def display_all_users(self, database: object, db: object) -> None:
         # View all the users
         while True:
             Display.clear_screen()
@@ -217,7 +219,7 @@ class Admin:
             break
 
     # Display a specific user
-    def display_specific_user(self, database, db):
+    def display_specific_user(self, database: object, db: object) -> None:
         while True:
             Display.clear_screen()
             print(Display.center_text_between_lines(f"{Colors.yellow_color('Find Specific User')}"))
@@ -238,7 +240,7 @@ class Admin:
             break
 
     # Deleting a user
-    def delete_user(self, database, db):
+    def delete_user(self, database: object, db: object) -> None:
         # Deleting a user
         while True:
             Display.clear_screen()
@@ -255,7 +257,7 @@ class Admin:
             break
 
     # Creating a user
-    def create_user(self, database, db):
+    def create_user(self, database: object, db: object) -> None:
         # Creating a user
         while True:
             Display.clear_screen()
@@ -302,7 +304,7 @@ class Admin:
             break
 
     # Update a user
-    def update_user(self, database, db):
+    def update_user(self, database: object, db: object) -> None:
         # Update a user
         while True:
             Display.clear_screen()
@@ -349,13 +351,31 @@ class Admin:
             break
 
     # Display admin menu
-    def admin_menu(self, current_user: object):
+    def admin_menu(self, current_user: object) -> None:
         Display.clear_screen()
         print(Display.center_text_between_lines("Welcome, " + Colors.yellow_color(f"{current_user.get('Username')}")))
         print("\t\t\t1. Create User")
         print("\t\t\t2. Delete User")
         print("\t\t\t3. Update User")
-        print("\t\t\t4. View Specific User")
-        print("\t\t\t5. View All Users")
-        print("\t\t\t6. Log Out")
-        print("\t\t\t7. Exit Program")
+        print("\t\t\t4. View Specific User Profile")
+        print("\t\t\t5. View Specific User Transactions")
+        print("\t\t\t6. View All Users")
+        print("\t\t\t7. Log Out")
+        print("\t\t\t8. Exit Program")
+
+    # View specific user transactions
+    def view_user_transactions(self, database: object, db: object) -> None:
+        while True:
+            Display.clear_screen()
+            print(Display.center_text_between_lines(f"{Colors.yellow_color('View Transactions')}"))
+
+            user = input(f"\t\t\tEnter {Colors.blue_color('Username')}: ")
+            is_User = database.find_by_username(db, user)
+
+
+            if is_User:
+                User.view_transactions(self, db, is_User)
+            else:
+                print(f"\t\t\tUser doesn't exist...")
+
+            break

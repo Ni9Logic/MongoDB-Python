@@ -35,15 +35,17 @@ def main():
                 while True:
                     admin.admin_menu(current_user)
 
-                    choice = input(f"\t\t\tEnter {Colors.yellow_color('<1-7>')}: ")
-                    if choice == '7':
+                    choice = input(f"\t\t\tEnter {Colors.yellow_color('<1-8>')}: ")
+                    if choice == '8':
                         # Simply exit the program
                         Display.clear_screen()
                         exit(0)
-                    elif choice == '6':
+                    elif choice == '7':
                         break
-                    elif choice == '5':
+                    elif choice == '6':
                         admin.display_all_users(database, db)
+                    elif choice == '5':
+                        admin.view_user_transactions(database, db)
                     elif choice == '4':
                         admin.display_specific_user(database, db)
                     elif choice == '3':

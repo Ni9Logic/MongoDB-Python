@@ -1,5 +1,6 @@
 import time
 import Colors
+import pymongo
 
 def create_transaction(db: object, from_user: str, transaction_type: str, transaction_amount: float, to_user = None) -> None:
 
@@ -34,7 +35,8 @@ def show_user_transactions(db: object, current_user: str) -> object or str:
     collection = db['Transactions']
     query = {'Username': current_user.get('Username')}
 
-    transactions = collection.find(query)
+    # This only gives us the last 5 results if there are and sorts them in Descending order.
+    transactions = collection.find(query).sort("_id", pymongo.DESCENDING).limit(5)
 
     if transactions:
         return transactions
