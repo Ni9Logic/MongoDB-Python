@@ -32,7 +32,7 @@ def create_transaction(db: object, from_user: str, transaction_type: str, transa
 
 def show_user_transactions(db: object, current_user: str) -> object or str:
     collection = db['Transactions']
-    query = {'Username': current_user}
+    query = {'Username': current_user.get('Username')}
 
     transactions = collection.find(query)
 

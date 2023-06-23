@@ -72,7 +72,7 @@ def main():
                     elif choice == '6':
                         break
                     elif choice == '5':
-                        pass
+                        user.view_transactions(db, current_user)
                     elif choice == '4':
                         user.view_profile(user_in_session)
                     elif choice == '3':

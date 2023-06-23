@@ -45,7 +45,8 @@ class User:
                 print(f"\t\t\tYour new balance is: {Colors.blue_color(str(new_balance))} rs /-")
                 
                 # Adding the successful transaction in transactions scheme
-                Transactions.create_transaction(current_user.get('Username'), 'Deposit', amount_to_deposit)
+                Transactions.create_transaction(db, current_user.get('Username'), 'Deposit', amount_to_deposit)
+                
             else:
                 print(f"\t\t\tSome random {Colors.red_color('Error')} has occurred...")
 
@@ -84,7 +85,7 @@ class User:
                         print(f"\t\t\tYour new balance is: {Colors.blue_color(str(float(current_user.get('Balance')) - amount_to_withdraw))} rs /-")
 
                         # Adding the successful transaction in transactions scheme
-                        Transactions.create_transaction(current_user.get('Username'), 'Withdraw', amount_to_withdraw)
+                        Transactions.create_transaction(db, current_user.get('Username'), 'Withdraw', amount_to_withdraw)
 
                     else:
                         print(f"\t\t\tSome random {Colors.red_color('Error')} has occurred...")
@@ -116,7 +117,7 @@ class User:
             transactions = Transactions.show_user_transactions(db, current_user)
 
             for index, trans in enumerate(transactions):
-                print(f"\t\t\tTransaction {Colors.yellow_color(f'{index + 1}')}\n")
+                print(f"\n\t\t\tTransaction {Colors.yellow_color(f'{index + 1}')}")
                 print(f"\t\t\tUsername: {Colors.blue_color(trans.get('Username'))}")
                 print(f"\t\t\tTransaction Type: {Colors.blue_color(str(trans.get('Transaction Type')))}")
                 print(f"\t\t\tTransaction Amount: {Colors.blue_color(str(trans.get('Transaction Amount')))}")
