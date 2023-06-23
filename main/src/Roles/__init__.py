@@ -1,6 +1,6 @@
 import Display
 import Colors
-import Transaction
+import Transactions
 import bcrypt
 
 class User:
@@ -44,8 +44,8 @@ class User:
                 print(f"\t\t\tYou have successfully withdrawn {Colors.green_color(str(amount_to_deposit))} rs /-")
                 print(f"\t\t\tYour new balance is: {Colors.blue_color(str(new_balance))} rs /-")
                 
-                # Adding the successfull transaction in transactions scheme
-                Transaction.create_transaction(current_user.get('Username'), 'Deposit', amount_to_deposit)
+                # Adding the successful transaction in transactions scheme
+                Transactions.create_transaction(current_user.get('Username'), 'Deposit', amount_to_deposit)
             else:
                 print(f"\t\t\tSome random {Colors.red_color('Error')} has occurred...")
 
@@ -83,8 +83,8 @@ class User:
                         print(f"\t\t\tYou have successfully withdrawn {Colors.green_color(str(amount_to_withdraw))} rs /-")
                         print(f"\t\t\tYour new balance is: {Colors.blue_color(str(float(current_user.get('Balance')) - amount_to_withdraw))} rs /-")
 
-                        # Adding the successfull transaction in transactions scheme
-                        Transaction.create_transaction(current_user.get('Username'), 'Withdraw', amount_to_withdraw)
+                        # Adding the successful transaction in transactions scheme
+                        Transactions.create_transaction(current_user.get('Username'), 'Withdraw', amount_to_withdraw)
 
                     else:
                         print(f"\t\t\tSome random {Colors.red_color('Error')} has occurred...")
@@ -113,7 +113,7 @@ class User:
             Display.clear_screen()
             print(Display.center_text_between_lines(f"{Colors.yellow_color('View Profile')}"))
 
-            transactions = Transaction.show_user_transactions(db, current_user)
+            transactions = Transactions.show_user_transactions(db, current_user)
 
             for index, trans in enumerate(transactions):
                 print(f"\t\t\tTransaction {Colors.yellow_color(f'{index + 1}')}\n")
@@ -149,18 +149,18 @@ class User:
                     if to_username == current_user.get('Username'):
                         print(f"\t\t\tYou {Colors.red_color('cannot')} enter your own username...")
                     else:
-                        # Findind the user inside database
+                        # Finding the user inside database
                         to_user_exist = database.find_by_username(db, to_username)
                         
                         # Checking if the user exists or not
                         if to_user_exist:
                             # If the user exists we want to deposit the amount in his account and withdraw amount from in session user
                             
-                            # Firstly wihdrawing from current user
+                            # Firstly withdrawing from current user
                             from_update = {'Balance': current_user.get('Balance')}
                             to_update = {'$set': {'Balance': str(float(current_user.get('Balance')) - amount_to_transfer)}}
 
-                            # Commiting the withdraw
+                            # Committing the withdraw
                             collection = db['Users']
                             collection.update_one(from_update, to_update)
 
@@ -168,15 +168,15 @@ class User:
                             from_update = {'Balance': to_user_exist.get('Balance')}
                             to_update = {'$set': {'Balance': str(float(to_user_exist.get('Balance')) + amount_to_transfer)}}
 
-                            # Commiting the deposit
+                            # Committing the deposit
                             collection = db['Users']
                             collection.update_one(from_update, to_update)
 
                             # Success message
                             print(f"\t\t\tAmount has {Colors.green_color('successfully')} transferred...")
 
-                            # Adding the successfull transaction in transactions scheme
-                            Transaction.create_transaction(current_user.get('Username'), 'Deposit', amount_to_transfer, to_username)
+                            # Adding the successful transaction in transactions scheme
+                            Transactions.create_transaction(current_user.get('Username'), 'Deposit', amount_to_transfer, to_username)
                         
                         else:
                             print(f"\t\t\tNo such user exists...")
