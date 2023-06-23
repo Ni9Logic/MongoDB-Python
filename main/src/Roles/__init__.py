@@ -177,7 +177,7 @@ class User:
                             print(f"\t\t\tAmount has {Colors.green_color('successfully')} transferred...")
 
                             # Adding the successful transaction in transactions scheme
-                            Transactions.create_transaction(current_user.get('Username'), 'Deposit', amount_to_transfer, to_username)
+                            Transactions.create_transaction(db, current_user.get('Username'), 'Deposit', amount_to_transfer, to_username)
                         
                         else:
                             print(f"\t\t\tNo such user exists...")
