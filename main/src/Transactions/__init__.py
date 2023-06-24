@@ -5,22 +5,14 @@ import pymongo
 def create_transaction(db: object, from_user: str, transaction_type: str, transaction_amount: float, to_user = None) -> None:
 
     # Lets say if the user withdraws or deposits he doesn't need a to user
-    if to_user == None:
-        transaction = {
-                "Username": from_user,
-                "Transaction Type": transaction_type,
-                "To User": 'None',
-                "Transaction Amount": transaction_amount,
-                "Transaction At": time.strftime('%c', time.localtime())
-            }
-    else:
-        transaction = {
-                "Username": from_user,
-                "Transaction Type": transaction_type,
-                "To User": to_user,
-                "Transaction Amount": transaction_amount,
-                "Transaction At": time.strftime('%c', time.localtime())
-            }
+    transaction = {
+            "Username": from_user,
+            "Transaction Type": transaction_type,
+            f"To User: {to_user},\n" if to_user != None else ""
+            "Transaction Amount": transaction_amount,
+            "Transaction At": time.strftime('%c', time.localtime())
+        }
+    
     
 
     collection = db['Transactions']

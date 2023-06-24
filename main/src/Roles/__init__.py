@@ -121,13 +121,14 @@ class User:
             transactions = Transactions.show_user_transactions(db, current_user)
 
             for trans in transactions:
+                to_user = trans.get('To User')
 
                 print(f"\t\t\tTransaction ID: {Colors.yellow_color(str(trans.get('_id')))}")
                 print(f"\t\t\tUsername: {Colors.blue_color(trans.get('Username'))}")
                 print(f"\t\t\tTransaction Type: {Colors.blue_color(str(trans.get('Transaction Type')))}")
                 print(f"\t\t\tTransaction Amount: {Colors.blue_color(str(trans.get('Transaction Amount')))}")
-                print(f"\t\t\tTo User: {Colors.blue_color(str(trans.get('To User')))}")
-                print(f"\t\t\tTransaction At: {Colors.blue_color(str(trans.get('Transaction At')))}")
+                print(f"\t\t\tTo User: {Colors.blue_color(to_user)}\n" if to_user != None else "", end ="")
+                print(f"\t\t\tTransaction At: {Colors.blue_color(str(trans.get('Transaction At')))}\n")
 
             break
 
@@ -281,9 +282,9 @@ class Admin:
             print(f"\t\t\t{Colors.red_color('2.')} Current")
             account_type = input(f"\t\t\tEnter: {Colors.blue_color('<1-2>')}: ")
             if account_type == '1':
-                account_type = True
+                account_type = "Savings"
             else:
-                account_type = False
+                account_type = "Current"
 
             # Admin account or not
             print(f"\t\t\tUser {Colors.green_color('Admin')}: ")

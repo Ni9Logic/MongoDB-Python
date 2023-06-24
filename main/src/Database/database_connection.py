@@ -36,7 +36,7 @@ class Database:
         else:
             return False
 
-    def create_user(self, db, username: str, password: str, account_type: bool, is_admin: bool, dob: str,
+    def create_user(self, db, username: str, password: str, account_type: str, is_admin: bool, dob: str,
                     bank_bal: str) -> None:
         # Loading collection of users from users table
         collection = db['Users']
